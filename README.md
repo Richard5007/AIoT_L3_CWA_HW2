@@ -176,3 +176,5 @@ python generate_gpt_history.py
 ## 五、GitHub / Google Colab 連結 (選填建議)
 - **GitHub 專案庫**：可直接將本資料夾推送至個人 GitHub（如 `https://github.com/your-username/king-county-house-regression-crisp-dm`）。
 - **Google Colab 執行**：將 `7115056152_hw2.ipynb` 與 `kc_house_data.csv` 上傳至 Google Drive 即可一鍵線上運行。
+#   A I o T _ L 3 _ C W A _ H W 2  
+ 
