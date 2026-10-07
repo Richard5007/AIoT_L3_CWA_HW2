@@ -48,7 +48,7 @@ class NumberedCanvas(canvas.Canvas):
         # Don't draw header on first page
         if self._pageNumber > 1:
             self.drawString(36, 815, "巨量資料分析與機器學習 (HW2) - 金郡房價多元線性回歸分析報告 (CRISP-DM)")
-            self.drawRightString(559, 815, "學號: 7114056XXX")
+            self.drawRightString(559, 815, "學號: 7115056152")
             self.setStrokeColor(colors.HexColor('#cbd5e1'))
             self.setLineWidth(0.5)
             self.line(36, 810, 559, 810)
@@ -63,7 +63,7 @@ class NumberedCanvas(canvas.Canvas):
         
         self.restoreState()
 
-def build_pdf_report(filename='7114056XXX_hw2_Report.pdf'):
+def build_pdf_report(filename='7115056152_hw2_Report.pdf'):
     doc = SimpleDocTemplate(
         filename,
         pagesize=A4,
@@ -183,7 +183,7 @@ def build_pdf_report(filename='7114056XXX_hw2_Report.pdf'):
     
     info_table_data = [
         [
-            Paragraph("<b>學生學號：</b> 7114056XXX (請同學替換)", table_text),
+            Paragraph("<b>學生學號：</b> 7115056152 (請同學替換)", table_text),
             Paragraph("<b>學生姓名：</b> 學生姓名", table_text),
             Paragraph("<b>分析主題：</b> 多元線性回歸 (MLR)", table_text)
         ],
@@ -609,6 +609,6 @@ def build_pdf_report(filename='7114056XXX_hw2_Report.pdf'):
     print(f"[SUCCESS] PDF report generated: {filename}")
 
 if __name__ == '__main__':
-    build_pdf_report('7114056XXX_hw2_Report.pdf')
-    # Also generate 7114056XXX_hw2.pdf
-    build_pdf_report('7114056XXX_hw2.pdf')
+    build_pdf_report('7115056152_hw2_Report.pdf')
+    # Also generate 7115056152_hw2.pdf
+    build_pdf_report('7115056152_hw2.pdf')

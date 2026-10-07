@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-Script to generate and execute 7114056XXX_hw2.ipynb
+Script to generate and execute 7115056152_hw2.ipynb
 """
 import nbformat as nbf
 from nbconvert.preprocessors import ExecutePreprocessor
@@ -13,7 +13,7 @@ cells = []
 # Title & Metadata
 cells.append(nbf.v4.new_markdown_cell("""# 巨量資料分析與機器學習 - 作業二 (HW2)
 ## 主題：基於 CRISP-DM 流程之金郡房價多元線性回歸分析 (Multiple Linear Regression)
-- **學號**：7114056XXX *(請同學替換為個人真實學號)*
+- **學號**：7115056152 *(請同學替換為個人真實學號)*
 - **姓名**：學生姓名
 - **資料集來源**：[Kaggle: House Sales in King County, USA](https://www.kaggle.com/datasets/harlfoxem/housesalesprediction)
 - **核心演算法**：多元線性回歸 (Multiple Linear Regression) 與 統計區間估計 (Confidence & Prediction Intervals)
@@ -551,7 +551,7 @@ cells.append(nbf.v4.new_markdown_cell("""---
 nb.cells = cells
 
 # Save unexecuted notebook first
-nb_path = '7114056XXX_hw2.ipynb'
+nb_path = '7115056152_hw2.ipynb'
 with open(nb_path, 'w', encoding='utf-8') as f:
     nbf.write(nb, f)
 
@@ -567,7 +567,7 @@ try:
     ep.preprocess(nb_to_run, {'metadata': {'path': '.'}})
     with open(nb_path, 'w', encoding='utf-8') as f:
         nbf.write(nb_to_run, f)
-    print("✅ 7114056XXX_hw2.ipynb 執行成功，所有儲存格輸出已妥善保存！")
+    print("[SUCCESS] 7115056152_hw2.ipynb executed successfully，所有儲存格輸出已妥善保存！")
 except Exception as e:
     print(f"執行警告或錯誤: {e}")
     # 即使執行報錯，已儲存好的 notebook 仍完整可用
