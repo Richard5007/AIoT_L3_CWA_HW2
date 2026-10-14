@@ -23,6 +23,14 @@ bold_font_path = 'C:/Windows/Fonts/msjhbd.ttc'
 pdfmetrics.registerFont(TTFont('ChineseFont', font_path))
 pdfmetrics.registerFont(TTFont('ChineseFontBold', bold_font_path))
 
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR) if os.path.basename(SCRIPT_DIR) in ['pdf_generator', 'pdf_generators', 'scripts'] else SCRIPT_DIR
+
+def get_rel_path(p):
+    if os.path.isabs(p):
+        return p
+    return os.path.normpath(os.path.join(PROJECT_ROOT, p))
+
 class NumberedCanvas(canvas.Canvas):
     def __init__(self, *args, **kwargs):
         super(NumberedCanvas, self).__init__(*args, **kwargs)
@@ -64,8 +72,9 @@ class NumberedCanvas(canvas.Canvas):
         self.restoreState()
 
 def build_pdf_report(filename='7115056152_hw2_Report.pdf'):
+    output_path = get_rel_path(filename)
     doc = SimpleDocTemplate(
-        filename,
+        output_path,
         pagesize=A4,
         leftMargin=36,
         rightMargin=36,
@@ -252,8 +261,9 @@ def build_pdf_report(filename='7115056152_hw2_Report.pdf'):
     ))
     
     # Fig 1 Table
-    if os.path.exists('figures/fig1_target_distribution.png'):
-        img1 = Image('figures/fig1_target_distribution.png', width=500, height=175)
+    fig1_path = get_rel_path('figures/fig1_target_distribution.png')
+    if os.path.exists(fig1_path):
+        img1 = Image(fig1_path, width=500, height=175)
         story.append(img1)
         story.append(Paragraph("【圖 1】房價分佈對比：(左) 原始房價呈現高度右偏態 (Skewness: 4.02)；(右) 對數轉換後顯著常態化 (Skewness: 0.43)", caption_style))
 
@@ -266,11 +276,13 @@ def build_pdf_report(filename='7115056152_hw2_Report.pdf'):
     ))
 
     # Fig 2 & Fig 3
-    if os.path.exists('figures/fig2_correlation_heatmap.png') and os.path.exists('figures/fig3_geo_distribution.png'):
+    fig2_path = get_rel_path('figures/fig2_correlation_heatmap.png')
+    fig3_path = get_rel_path('figures/fig3_geo_distribution.png')
+    if os.path.exists(fig2_path) and os.path.exists(fig3_path):
         t_eda_imgs = Table([
             [
-                Image('figures/fig2_correlation_heatmap.png', width=245, height=205),
-                Image('figures/fig3_geo_distribution.png', width=245, height=205)
+                Image(fig2_path, width=245, height=205),
+                Image(fig3_path, width=245, height=205)
             ]
         ], colWidths=[250, 250])
         t_eda_imgs.setStyle(TableStyle([
@@ -428,17 +440,20 @@ def build_pdf_report(filename='7115056152_hw2_Report.pdf'):
         body_style
     ))
 
-    if os.path.exists('figures/fig4_simple_linear_regression_ci_pi.png'):
-        img4 = Image('figures/fig4_simple_linear_regression_ci_pi.png', width=500, height=210)
+    fig4_path = get_rel_path('figures/fig4_simple_linear_regression_ci_pi.png')
+    if os.path.exists(fig4_path):
+        img4 = Image(fig4_path, width=500, height=210)
         story.append(img4)
         story.append(Paragraph("【圖 4】單變數線性回歸擬合圖：紅色為回歸線，深藍色色帶為 95% 信賴區間 (CI)，黑色虛線為 95% 預測區間 (PI)", caption_style))
 
     # Fig 5 & Fig 6
-    if os.path.exists('figures/fig5_mlr_actual_vs_pred.png') and os.path.exists('figures/fig6_mlr_prediction_interval.png'):
+    fig5_path = get_rel_path('figures/fig5_mlr_actual_vs_pred.png')
+    fig6_path = get_rel_path('figures/fig6_mlr_prediction_interval.png')
+    if os.path.exists(fig5_path) and os.path.exists(fig6_path):
         t_pred_imgs = Table([
             [
-                Image('figures/fig5_mlr_actual_vs_pred.png', width=225, height=200),
-                Image('figures/fig6_mlr_prediction_interval.png', width=285, height=200)
+                Image(fig5_path, width=225, height=200),
+                Image(fig6_path, width=285, height=200)
             ]
         ], colWidths=[230, 293])
         t_pred_imgs.setStyle(TableStyle([
@@ -461,17 +476,20 @@ def build_pdf_report(filename='7115056152_hw2_Report.pdf'):
         body_style
     ))
 
-    if os.path.exists('figures/fig7_residual_diagnostics.png'):
-        img7 = Image('figures/fig7_residual_diagnostics.png', width=490, height=220)
+    fig7_path = get_rel_path('figures/fig7_residual_diagnostics.png')
+    if os.path.exists(fig7_path):
+        img7 = Image(fig7_path, width=490, height=220)
         story.append(img7)
         story.append(Paragraph("【圖 7】殘差統計診斷圖四合一：包含擬合值散佈圖、常態 Q-Q 圖、殘差分佈直方圖與尺度-定位圖", caption_style))
 
     # Fig 8 & Fig 9
-    if os.path.exists('figures/fig8_model_comparison.png') and os.path.exists('figures/fig9_feature_importance.png'):
+    fig8_path = get_rel_path('figures/fig8_model_comparison.png')
+    fig9_path = get_rel_path('figures/fig9_feature_importance.png')
+    if os.path.exists(fig8_path) and os.path.exists(fig9_path):
         t_comp_imgs = Table([
             [
-                Image('figures/fig8_model_comparison.png', width=255, height=180),
-                Image('figures/fig9_feature_importance.png', width=255, height=180)
+                Image(fig8_path, width=255, height=180),
+                Image(fig9_path, width=255, height=180)
             ]
         ], colWidths=[260, 263])
         t_comp_imgs.setStyle(TableStyle([

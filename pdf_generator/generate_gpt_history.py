@@ -249,13 +249,16 @@ html_content += """
 </html>
 """
 
-html_file = 'GPT_Conversation_History.html'
+SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = os.path.dirname(SCRIPT_DIR) if os.path.basename(SCRIPT_DIR) in ['pdf_generator', 'pdf_generators', 'scripts'] else SCRIPT_DIR
+
+html_file = os.path.join(PROJECT_ROOT, 'GPT_Conversation_History.html')
 with open(html_file, 'w', encoding='utf-8') as f:
     f.write(html_content)
 print(f"GPT 對話 HTML 檔案已建立：{html_file}")
 
 # Build PDF version using ReportLab
-pdf_file = 'GPT_Conversation_History.pdf'
+pdf_file = os.path.join(PROJECT_ROOT, 'GPT_Conversation_History.pdf')
 doc = SimpleDocTemplate(
     pdf_file,
     pagesize=A4,

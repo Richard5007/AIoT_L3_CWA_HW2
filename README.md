@@ -24,8 +24,11 @@
 ├── 7115056152_hw2.pdf                  # 【正式報告】符合單一命名規則之 PDF 報告備份
 ├── GPT_Conversation_History.pdf        # 【AI輔助】與 ChatGPT 之完整對話過程 PDF 匯出檔
 ├── GPT_Conversation_History.html       # 【AI輔助】ChatGPT 網頁風格對話紀錄 (可透過 pdfcrowd.com 重新匯出)
-├── README.md                           # 本專案完整說明文件 (包含流程、成果與 GitHub/Colab 指南)
 ├── 7115056152_hw2.zip                  # 作業繳交壓縮包 (包含所有程式、報告、圖表與說明)
+│
+├── pdf_generator/                      # 【PDF 生成工具】專門放置生成各項 PDF 報告之 Python 程式
+│   ├── generate_report_pdf.py          # 產出正式 CRISP-DM 評估與分析 PDF 報告之腳本
+│   └── generate_gpt_history.py         # 產出 ChatGPT 完整對話歷程 PDF 與 HTML 之腳本
 │
 └── figures/                            # 高解析度 (300 DPI) 視覺化圖表產出資料夾
     ├── fig1_target_distribution.png              # 圖 1: 原始房價偏態 vs. 對數轉換分佈圖
@@ -174,8 +177,8 @@ jupyter notebook 7115056152_hw2.ipynb
 
 ### 4. 重新產出正式 PDF 報告或 GPT 對話
 ```bash
-python generate_report_pdf.py
-python generate_gpt_history.py
+python pdf_generator/generate_report_pdf.py
+python pdf_generator/generate_gpt_history.py
 ```
 
 ---
