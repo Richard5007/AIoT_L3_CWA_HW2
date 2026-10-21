@@ -211,7 +211,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Micr
 <div class="container">
 <div class="header">
   <h1>AI 輔助對話過程紀錄 (ChatGPT Dialogue History)</h1>
-  <p>專案：多元線性回歸分析 (King County House Sales) | 遵循 CRISP-DM 流程 | 學號：7115056152</p>
+  <p>專案：多元線性回歸分析 (King County House Sales) | 遵循 CRISP-DM 流程</p>
 </div>
 <div class="chat-container">
 """
@@ -317,7 +317,7 @@ body_style = ParagraphStyle(
 story = []
 
 story.append(Paragraph("巨量資料分析與機器學習 HW2 - ChatGPT 對話歷程紀錄", title_style))
-story.append(Paragraph("資料集：House Sales in King County, USA | 學號：7115056152 | 遵循 CRISP-DM 流程", sub_style))
+story.append(Paragraph("資料集：House Sales in King County, USA | 遵循 CRISP-DM 流程", sub_style))
 story.append(HRFlowable(width="100%", thickness=1.5, color=colors.HexColor('#0f766e'), spaceAfter=12))
 
 for item in conversation:

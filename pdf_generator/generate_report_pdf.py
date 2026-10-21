@@ -5,8 +5,8 @@ Following CRISP-DM methodology, with figures, tables, formulas, AI statements, N
 """
 import os
 import sys
-import pandas as pd
-import numpy as np
+# import pandas as pd
+# import numpy as np
 from reportlab.lib.pagesizes import A4
 from reportlab.lib import colors
 from reportlab.platypus import (
@@ -56,7 +56,7 @@ class NumberedCanvas(canvas.Canvas):
         # Don't draw header on first page
         if self._pageNumber > 1:
             self.drawString(36, 815, "巨量資料分析與機器學習 (HW2) - 金郡房價多元線性回歸分析報告 (CRISP-DM)")
-            self.drawRightString(559, 815, "學號: 7115056152")
+            self.drawRightString(559, 815, "多元線性回歸分析報告")
             self.setStrokeColor(colors.HexColor('#cbd5e1'))
             self.setLineWidth(0.5)
             self.line(36, 810, 559, 810)
@@ -192,9 +192,9 @@ def build_pdf_report(filename='7115056152_hw2_Report.pdf'):
     
     info_table_data = [
         [
-            Paragraph("<b>學生學號：</b> 7115056152 (請同學替換)", table_text),
-            Paragraph("<b>學生姓名：</b> 學生姓名", table_text),
-            Paragraph("<b>分析主題：</b> 多元線性回歸 (MLR)", table_text)
+            Paragraph("<b>分析主題：</b> 多元線性回歸 (MLR)", table_text),
+            Paragraph("<b>流程架構：</b> CRISP-DM 完整流程", table_text),
+            Paragraph("<b>預測目標：</b> 房屋售價 (price)", table_text)
         ],
         [
             Paragraph("<b>資料來源：</b> Kaggle King County House Sales", table_text),

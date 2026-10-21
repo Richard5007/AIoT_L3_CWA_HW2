@@ -3,8 +3,6 @@
 ================================================================================
 巨量資料分析與機器學習 - 作業二 (HW2)
 主題：基於 CRISP-DM 流程之金郡房價多元線性回歸分析 (Multiple Linear Regression)
-學號：7115056152 (請同學替換為個人學號)
-姓名：學生姓名
 資料集：House Sales in King County, USA (Kaggle)
 資料集來源連結：https://www.kaggle.com/datasets/harlfoxem/housesalesprediction
 ================================================================================
