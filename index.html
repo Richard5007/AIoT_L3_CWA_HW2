@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HW2 — CRISP-DM 多元線性回歸互動分析平台</title>
+  <meta name="description" content="以 CRISP-DM 流程進行多元線性回歸 (MLR)、特徵選擇、模型評估與信賴/預測區間的互動式網頁，支援 King County 房價、Flood Prediction 與任意 CSV 資料集。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="web/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+</head>
+<body>
+  <header class="hero">
+    <div class="wrap">
+      <p class="eyebrow">巨量資料分析與機器學習 ｜ HW2 ｜ 7115056152</p>
+      <h1>CRISP-DM 多元線性回歸互動分析平台</h1>
+      <p class="sub">Multiple Linear Regression · Feature Selection · Model Evaluation · Confidence &amp; Prediction Intervals — 全部在瀏覽器端即時運算</p>
+      <nav class="toc">
+        <a href="#control">⚙️ 設定</a><a href="#bu">1. Business</a><a href="#du">2. Data</a><a href="#dp">3. Preparation</a>
+        <a href="#mo">4. Modeling</a><a href="#ev">5. Evaluation</a><a href="#de">6. Deployment</a><a href="#ai">🤖 AI 輔助</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <!-- ============================== 控制面板 ============================== -->
+    <section id="control" class="card control">
+      <h2>⚙️ 選擇問題與模型設定</h2>
+      <div class="row big">
+        <label for="problemSelect">Problem 下拉選單</label>
+        <select id="problemSelect"></select>
+      </div>
+
+      <div id="customPanel" class="custom hidden">
+        <div class="row">
+          <label for="urlInput">CSV 網址</label>
+          <div class="urlbox">
+            <input id="urlInput" type="url" placeholder="https://raw.githubusercontent.com/.../data.csv"
+              value="https://raw.githubusercontent.com/Avik-Jain/100-Days-Of-ML-Code/master/datasets/50_Startups.csv">
+            <button id="loadUrlBtn" class="btn">載入資料</button>
+          </div>
+        </div>
+        <div class="row">
+          <label>範例</label>
+          <div id="examples" class="chips"></div>
+        </div>
+        <div class="row">
+          <label for="fileInput">或上傳 CSV</label>
+          <input id="fileInput" type="file" accept=".csv,text/csv">
+        </div>
+        <p class="muted">支援任何公開、可跨域讀取 (CORS) 的 CSV，例如 GitHub raw 連結；GitHub「blob」網址會自動轉為 raw。類別欄位會自動 One-Hot 編碼，缺失值以中位數補值。</p>
+      </div>
+
+      <div class="grid-settings">
+        <div class="row hidden" id="targetRow">
+          <label for="targetSelect">目標變數 (y)</label>
+          <select id="targetSelect"></select>
+        </div>
+        <div class="row">
+          <label for="methodSelect">特徵選擇方法</label>
+          <select id="methodSelect">
+            <option value="forward">Forward Stepwise (逐步前進)</option>
+            <option value="backward">Backward Elimination (p-value 逐步剔除)</option>
+            <option value="kbest">SelectKBest (|相關係數| 前 k 名)</option>
+            <option value="all">全部候選特徵 (Full MLR)</option>
+            <option value="manual">手動勾選 (下方特徵池)</option>
+          </select>
+        </div>
+        <div class="row" id="critRow">
+          <label for="critSelect">Forward 準則</label>
+          <select id="critSelect">
+            <option value="bic">BIC (較精簡)</option>
+            <option value="aic">AIC</option>
+            <option value="adjr2">Adjusted R²</option>
+          </select>
+        </div>
+        <div class="row" id="alphaRow">
+          <label for="alphaSelect">Backward 顯著水準 α</label>
+          <select id="alphaSelect">
+            <option value="0.01">0.01</option>
+            <option value="0.05" selected>0.05</option>
+            <option value="0.1">0.10</option>
+          </select>
+        </div>
+        <div class="row" id="kRow">
+          <label for="kSlider">KBest 的 k = <b id="kVal">10</b></label>
+          <input id="kSlider" type="range" min="1" max="40" value="10">
+        </div>
+        <div class="row">
+          <label for="testSlider">測試集比例 <b id="testVal">20%</b></label>
+          <input id="testSlider" type="range" min="10" max="40" step="5" value="20">
+        </div>
+        <div class="row">
+          <label for="confSelect">信賴 / 預測區間水準</label>
+          <select id="confSelect">
+            <option value="0.9">90%</option>
+            <option value="0.95" selected>95%</option>
+            <option value="0.99">99%</option>
+          </select>
+        </div>
+        <div class="row">
+          <label for="seedInput">Random seed</label>
+          <input id="seedInput" type="number" value="42">
+        </div>
+        <div class="row">
+          <label class="inline"><input id="logY" type="checkbox"> 目標取 log 轉換</label>
+        </div>
+      </div>
+
+      <details class="pool">
+        <summary>🧩 候選特徵池 (勾選要納入選擇的特徵) — <span id="poolCount">0 / 0</span></summary>
+        <div class="pool-actions"><button id="poolAll" class="btn ghost">全選</button><button id="poolNone" class="btn ghost">全不選</button></div>
+        <div id="poolBox" class="poolbox"></div>
+      </details>
+
+      <div id="status" class="status info">載入中…</div>
+    </section>
+
+    <!-- ============================== 1. Business ============================== -->
+    <section id="bu" class="card">
+      <h2><span class="step">1</span> Business Understanding 商業理解</h2>
+      <div id="bizContent"></div>
+    </section>
+
+    <!-- ============================== 2. Data ============================== -->
+    <section id="du" class="card">
+      <h2><span class="step">2</span> Data Understanding 資料理解</h2>
+      <div id="duKpi" class="kpis"></div>
+      <details open><summary>欄位概覽 (型態 / 缺失值 / 唯一值 / 處理方式)</summary><div id="colTable" class="scroll"></div></details>
+      <div id="chartTarget" class="chart"></div>
+      <div class="two">
+        <div id="chartCorrBar" class="chart"></div>
+        <div id="chartHeatmap" class="chart"></div>
+      </div>
+    </section>
+
+    <!-- ============================== 3. Preparation ============================== -->
+    <section id="dp" class="card">
+      <h2><span class="step">3</span> Data Preparation 資料準備</h2>
+      <ol id="prepList" class="steps"></ol>
+    </section>
+
+    <!-- ============================== 4. Modeling ============================== -->
+    <section id="mo" class="card">
+      <h2><span class="step">4</span> Modeling 模型建構 &amp; 特徵選擇</h2>
+      <div id="fsSummary"></div>
+      <div id="chartPath" class="chart"></div>
+      <h3>特徵選擇方法比較 (★ = 目前選用)</h3>
+      <div id="methodTable" class="scroll"></div>
+      <h3>OLS 迴歸係數表</h3>
+      <div id="coefTable" class="scroll"></div>
+      <div id="chartCoef" class="chart"></div>
+    </section>
+
+    <!-- ============================== 5. Evaluation ============================== -->
+    <section id="ev" class="card">
+      <h2><span class="step">5</span> Evaluation 模型評估</h2>
+      <div id="evalKpi" class="kpis"></div>
+      <p id="evalNote" class="note"></p>
+      <div id="benchmark"></div>
+      <div id="chartPI" class="chart"></div>
+      <div class="two">
+        <div id="chartAvP" class="chart"></div>
+        <div id="chartSLR" class="chart"></div>
+      </div>
+      <h3>殘差診斷 (線性回歸假設檢驗)</h3>
+      <div class="three">
+        <div id="chartResid" class="chart"></div>
+        <div id="chartQQ" class="chart"></div>
+        <div id="chartResHist" class="chart"></div>
+      </div>
+      <button id="dlBtn" class="btn ghost">⬇️ 下載測試集預測結果 (含 CI / PI) CSV</button>
+    </section>
+
+    <!-- ============================== 6. Deployment ============================== -->
+    <section id="de" class="card">
+      <h2><span class="step">6</span> Deployment 部署 — 即時預測</h2>
+      <p class="muted">輸入新樣本的特徵值，即時取得點估計、信賴區間 (平均反應) 與預測區間 (個別新觀測)。預設值為訓練集中位數。</p>
+      <div class="deploy">
+        <div id="deployForm" class="form"></div>
+        <div>
+          <div id="deployResult" class="result"></div>
+          <div id="chartDeploy" class="chart small"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== AI 輔助 ============================== -->
+    <section id="ai" class="card">
+      <h2>🤖 AI 輔助內容標示</h2>
+      <div class="two">
+        <div class="callout gpt">
+          <h3>【GPT 輔助內容】</h3>
+          <ul>
+            <li>Kaggle 題目篩選：列出 14~39 個特徵的回歸問題，選定 King County 房價與 Flood Prediction 兩題。</li>
+            <li>多重共線性診斷：發現 <code>sqft_living = sqft_above + sqft_basement</code>，以 VIF 量化。</li>
+            <li>CI 與 PI 公式推導：Var(ŷ₀) = σ²x₀ᵀ(XᵀX)⁻¹x₀ 與 σ²[1 + x₀ᵀ(XᵀX)⁻¹x₀]。</li>
+            <li>網頁架構建議：純前端 (Plotly + PapaParse) 實作 OLS，以便部署到 GitHub Pages。</li>
+          </ul>
+          <p>完整對話：<a href="GPT_Conversation_History.pdf" target="_blank">GPT_Conversation_History.pdf</a></p>
+        </div>
+        <div class="callout nlm">
+          <h3>【NotebookLM 摘要】</h3>
+          <p>彙整 Kaggle 高分 Notebook 與文獻：線性回歸在 King County 資料的 R² 約 0.68~0.72，Flood Prediction 約 0.845；
+            排行榜前段方案多使用 LightGBM / XGBoost / CatBoost 集成，並透過 zipcode 目標編碼、KNN 鄰近均價 (房價) 或列統計特徵 sum / std (洪水) 提升至 R² ≈ 0.87。
+            然而樹模型缺乏係數可解釋性與解析的區間估計；MLR 提供邊際效果 β、顯著性檢定與 95% CI / PI，在法規審查、防災決策溝通上仍具不可取代的價值。
+            實務建議：以 MLR 作為可解釋基準模型，再用 GBDT 作為效能上限對照。</p>
+          <p>完整報告：<a href="7115056152_hw2_Report.pdf" target="_blank">7115056152_hw2_Report.pdf</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="wrap foot">
+    <p>© 2026 HW2 · 7115056152 · 資料來源：
+      <a href="https://www.kaggle.com/datasets/harlfoxem/housesalesprediction" target="_blank" rel="noopener">King County House Sales</a> ·
+      <a href="https://www.kaggle.com/competitions/playground-series-s4e5" target="_blank" rel="noopener">Kaggle Playground S4E5 Flood Prediction</a> ·
+      <a href="https://github.com/Richard5007/AIoT_L3_CWA_HW2" target="_blank" rel="noopener">GitHub Repo</a></p>
+  </footer>
+
+  <script src="web/stats.js"></script>
+  <script src="web/app.js"></script>
+</body>
+</html>

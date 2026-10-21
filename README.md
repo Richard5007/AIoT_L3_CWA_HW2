@@ -9,6 +9,34 @@
 - **分析任務**：多元線性回歸 (Multiple Linear Regression)、特徵選擇 (Feature Selection)、模型評估 (Model Evaluation)、95% 信賴區間與預測區間推導
 - **遵循架構**：CRISP-DM (跨行業資料探勘標準流程) 六大階段
 - **GitHub 專案庫**：[https://github.com/Richard5007/AIoT_L3_CWA_HW2](https://github.com/Richard5007/AIoT_L3_CWA_HW2)
+- **GitHub Pages 線上互動分析平台**：[https://richard5007.github.io/AIoT_L3_CWA_HW2/](https://richard5007.github.io/AIoT_L3_CWA_HW2/)
+
+---
+
+## 🌟 作業加分項目實作說明 (總分 +3 分)
+本專案特別建構了可直接部署於 **GitHub Pages** 的純前端互動式機器學習回歸分析網頁平台（index.html），完整達成所有加分需求：
+
+### 1. 【加總分 1分】下拉選單呈現兩種回歸問題 (Problem)
+網頁頂端設有互動下拉視窗，可一鍵切換兩種符合「14 ~ 39 個特徵」限制的 Kaggle 多元線性回歸問題：
+- **Problem 1：King County 房價預測 (House Sales in King County, USA)**
+  - 18 個候選特徵（含屋齡、距西雅圖市中心距離等領域特徵工程衍生變數），連續預測目標 price。
+  - 內建共線性自動偵測與 OLS 正則化推導。
+- **Problem 2：Flood Prediction 洪水機率預測 (Kaggle Playground Series S4E5)**
+  - 20 個風險特徵（MonsoonIntensity、TopographyDrainage、RiverManagement 等），連續預測目標 FloodProbability。
+  - 內含 Kaggle 基準與排行榜主流對比（OLS 基準 R² ≈ 0.845 vs. GBDT 上限 R² ≈ 0.869）。
+
+### 2. 【加總分 2分】可任意輸入自訂 Dataset (如 50_Startups.csv)
+- 支援使用者輸入任意公開 CSV 網址（例如 https://raw.githubusercontent.com/Avik-Jain/100-Days-Of-ML-Code/master/datasets/50_Startups.csv）或直接由本機拖曳上傳 CSV。
+- **全自動化資料準備**：
+  - 自動偵測數值欄位與目標變數 (y) 下拉切換。
+  - 自動進行類別欄位 One-Hot Encoding（基準類別自動設定，避免 Dummy Variable Trap）。
+  - 自動缺失值中位數補值、常數欄位過濾與完全共線性防護。
+- **完整 CRISP-DM 流程即時運算**：
+  - 特徵選擇（Forward Stepwise、Backward Elimination、SelectKBest、手動挑選）。
+  - 統計檢定（R²、Adjusted R²、RMSE、MAE、MAPE、5-Fold 交叉驗證、F 檢定、係數 t 檢定與 p-value）。
+  - 信賴區間 (CI) 與預測區間 (PI) 擬合可視化圖表。
+  - 互動式單筆樣本推論（Deployment 表單）。
+
 
 ---
 
