@@ -12,7 +12,8 @@
   const PROBLEMS = {
     kc: {
       label: '🏠 Problem 1：King County 房價預測 (House Sales, 18 features)',
-      url: 'kc_house_data.csv',
+      url: 'https://raw.githubusercontent.com/Richard5007/AIoT_L3_CWA_HW2/main/kc_house_data.csv',
+      fallbackUrl: 'kc_house_data.csv',
       target: 'price',
       logDefault: false,
       source: 'https://www.kaggle.com/datasets/harlfoxem/housesalesprediction',
@@ -35,7 +36,8 @@
     },
     flood: {
       label: '🌊 Problem 2：Flood Prediction 洪水機率預測 (Playground S4E5, 20 features)',
-      url: 'data/flood_sample.csv',
+      url: 'https://raw.githubusercontent.com/Richard5007/AIoT_L3_CWA_HW2/main/data/flood_sample.csv',
+      fallbackUrl: 'data/flood_sample.csv',
       target: 'FloodProbability',
       logDefault: false,
       source: 'https://www.kaggle.com/competitions/playground-series-s4e5',
@@ -125,7 +127,10 @@
           const fields = res.meta.fields.filter(f => f !== undefined && f !== null && String(f).trim() !== '');
           resolve({ fields, rows: res.data });
         },
-        error: (err) => reject(err),
+        error: (err) => {
+          const msg = (err && (err.message || (err.type === 'error' ? '網路請求失敗 (請確認檔案存在或伺服器正常)' : JSON.stringify(err)))) || '載入失敗';
+          reject(new Error(msg));
+        },
       });
     });
   }
@@ -140,12 +145,21 @@
       return;
     }
     $('logY').checked = P.logDefault;
-    setStatus(`⏳ 正在載入 <b>${esc(P.url)}</b> …`, 'info');
+    setStatus(`⏳ 正在載入資料集 …`, 'info');
     try {
-      const raw = await parseCSV(P.url, false);
-      onRawLoaded(raw, P.url);
+      let raw;
+      try {
+        raw = await parseCSV(P.url, false);
+      } catch (errOnline) {
+        if (P.fallbackUrl) {
+          raw = await parseCSV(P.fallbackUrl, false);
+        } else {
+          throw errOnline;
+        }
+      }
+      onRawLoaded(raw, P.sourceName || P.url);
     } catch (e) {
-      setStatus(`❌ 載入失敗：${esc(e.message || e)}（若在本機直接開啟 index.html，請改用 <code>python -m http.server</code> 啟動）`, 'error');
+      setStatus(`❌ 載入失敗：${esc(e.message || e)}（若在本地端直接以 file:// 協議開啟，瀏覽器會阻擋讀取本機 CSV，請使用本機伺服器如 <code>python -m http.server</code>，或直接點選上方的「或上傳 CSV」直接讀取本機檔案）`, 'error');
     }
   }
 
