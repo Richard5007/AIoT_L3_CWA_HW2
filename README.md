@@ -3,8 +3,7 @@
 ## 巨量資料分析與機器學習 - 作業二 (HW2)
 ### 主題：基於 CRISP-DM 流程之金郡 (King County) 房價多元線性回歸完整分析
 
-- **學生學號**：`7115056152` *(同學繳交前請確認學號)*
-- **學生姓名**：學生姓名
+- **學生學號**：`7115056152`
 - **資料集來源**：[Kaggle: House Sales in King County, USA](https://www.kaggle.com/datasets/harlfoxem/housesalesprediction)
 - **分析任務**：多元線性回歸 (Multiple Linear Regression)、特徵選擇 (Feature Selection)、模型評估 (Model Evaluation)、95% 信賴區間與預測區間推導
 - **遵循架構**：CRISP-DM (跨行業資料探勘標準流程) 六大階段
@@ -14,6 +13,9 @@
 ---
 
 ## 🌟 作業加分項目實作說明 (總分 +3 分)
+
+![多元線性回歸互動分析平台網頁截圖](image.png)
+
 本專案特別建構了可直接部署於 **GitHub Pages** 的純前端互動式機器學習回歸分析網頁平台（index.html），完整達成所有加分需求：
 
 ### 1. 【加總分 1分】下拉選單呈現兩種回歸問題 (Problem)
